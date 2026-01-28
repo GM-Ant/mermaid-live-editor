@@ -31,7 +31,7 @@ ${code}
 \`\`\`
 The current Mermaid configuration is:
 \`\`\`json
-${config}
+${JSON.stringify(config, null, 2)}
 \`\`\`
 
 Rules:

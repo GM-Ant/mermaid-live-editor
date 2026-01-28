@@ -26,6 +26,8 @@
   import CodeIcon from '~icons/custom/code';
   import HistoryIcon from '~icons/material-symbols/history';
   import GearIcon from '~icons/material-symbols/settings-outline-rounded';
+  import ChatPanel from '$/components/Chat/ChatPanel.svelte';
+  import { MessageSquare } from 'lucide-svelte';
 
   const panZoomState = new PanZoomState();
 
@@ -59,6 +61,7 @@
   });
 
   let isHistoryOpen = $state(false);
+  let isChatOpen = $state(false);
 
   let editorPane: Resizable.Pane | undefined;
   $effect(() => {
@@ -82,6 +85,9 @@
   {/snippet}
 
   <Navbar mobileToggle={isMobile ? mobileToggle : undefined}>
+    <Toggle bind:pressed={isChatOpen} size="sm" aria-label="Toggle Chat">
+      <MessageSquare class="size-4" />
+    </Toggle>
     <Toggle bind:pressed={isHistoryOpen} size="sm">
       <HistoryIcon />
     </Toggle>
@@ -135,6 +141,15 @@
           <div class="absolute right-0 bottom-0"><VersionSecurityToolbar /></div>
           <div class="absolute bottom-0 left-0 sm:left-5"><SyncRoughToolbar /></div>
         </Resizable.Pane>
+        {#if isChatOpen}
+          <Resizable.Handle class="ml-1 hidden opacity-0 sm:block" />
+          <Resizable.Pane
+            minSize={15}
+            defaultSize={30}
+            class="hidden h-full flex-grow flex-col sm:flex">
+            <ChatPanel />
+          </Resizable.Pane>
+        {/if}
         {#if isHistoryOpen}
           <Resizable.Handle class="ml-1 hidden opacity-0 sm:block" />
           <Resizable.Pane

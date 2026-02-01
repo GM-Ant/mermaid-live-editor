@@ -36,9 +36,10 @@ ${JSON.stringify(config, null, 2)}
 
 Rules:
 1.  Always prioritize valid Mermaid syntax.
-2.  If asked to modify the diagram, provide the full updated Mermaid code in a code block.
-3.  Explain your changes briefly.
-4.  Do not hallucinate syntax that doesn't exist in Mermaid.
+2.  When the user asks to modify the diagram, ALWAYS call the 'updateDiagram' tool with the full valid Mermaid code.
+3.  Do not output the Mermaid code in a markdown block if you are using the tool.
+4.  Explain your changes briefly in text along with the tool call.
+5.  Do not hallucinate syntax that doesn't exist in Mermaid.
 `;
 
 		// Prepend system message to messages
@@ -52,12 +53,33 @@ Rules:
 			headers['Authorization'] = `Bearer ${apiKey}`;
 		}
 
+		const tools = [
+			{
+				type: 'function',
+				function: {
+					name: 'updateDiagram',
+					description: 'Update the Mermaid diagram code.',
+					parameters: {
+						type: 'object',
+						properties: {
+							code: {
+								type: 'string',
+								description: 'The full valid Mermaid diagram code to replace the current one with.'
+							}
+						},
+						required: ['code']
+					}
+				}
+			}
+		];
+
 		const response = await fetch(`${endpoint}/chat/completions`, {
 			method: 'POST',
 			headers,
 			body: JSON.stringify({
 				model,
 				messages: finalMessages,
+				tools,
 				stream: true
 			})
 		});

@@ -98,4 +98,46 @@ test.describe('Chat Integration', () => {
         // Back to Floating
          await expect(page.getByText('AI Assistant')).toBeVisible();
     });
+
+    test('should reset chat and clear history', async ({ page }) => {
+        const chatToggle = page.locator('button[aria-label="Toggle Chat"]');
+		await chatToggle.click();
+
+        // Send a message (mocked response doesn't matter much here, we rely on persistence)
+        await page.route('/api/chat', async (route) => {
+             const chunks = [
+                { choices: [{ delta: { content: "I remember this." } }] }
+            ];
+            let body = '';
+            for (const chunk of chunks) {
+                body += `data: ${JSON.stringify(chunk)}\n\n`;
+            }
+            body += 'data: [DONE]\n\n';
+			await route.fulfill({ body, contentType: 'text/event-stream' });
+        });
+
+        const input = page.getByPlaceholder('How can I help you');
+		await input.fill('Message to forget');
+		await page.keyboard.press('Enter');
+
+        await expect(page.getByText('Message to forget')).toBeVisible();
+        await expect(page.getByText('I remember this.')).toBeVisible();
+
+        // Reload page to verify persistence
+        await page.reload();
+        await chatToggle.click();
+        await expect(page.getByText('Message to forget')).toBeVisible();
+
+        // Click Reset
+        await page.getByTitle('Clear Chat').click();
+
+        // Verify messages gone
+        await expect(page.getByText('Message to forget')).not.toBeVisible();
+        await expect(page.getByText('Ask me to explain')).toBeVisible(); // Placeholder
+
+        // Reload again to verify persistence cleared
+        await page.reload();
+        await chatToggle.click();
+        await expect(page.getByText('Message to forget')).not.toBeVisible();
+    });
 });

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { stateStore, updateCode, updateCodeStore } from '$lib/util/state';
 	import { Button } from '$lib/components/ui/button';
-	import { Send, Bot, User, Loader2, Play, Maximize2, Minimize2, X, Check, X as XIcon } from 'lucide-svelte';
+	import { Send, Bot, User, Loader2, Play, Maximize2, Minimize2, X, Check, X as XIcon, Trash2 } from 'lucide-svelte';
 	import { marked } from 'marked';
 	import DOMPurify from 'dompurify';
 	import { tick, onMount } from 'svelte';
@@ -68,8 +68,17 @@
     $effect(() => {
         if (messages.length > 0) {
             localStorage.setItem('mermaid-chat-history', JSON.stringify(messages));
+        } else {
+            // Clear storage if messages empty (reset)
+            localStorage.removeItem('mermaid-chat-history');
         }
     });
+
+    const resetChat = () => {
+        messages = [];
+        input = '';
+        isLoading = false;
+    };
 
 	const scrollToBottom = async () => {
 		await tick();
@@ -255,6 +264,9 @@
                 <Bot size={16} /> AI Assistant
             </div>
             <div class="flex items-center gap-1">
+                 <Button variant="ghost" size="icon" class="h-6 w-6" onclick={resetChat} title="Clear Chat">
+                    <Trash2 size={14} />
+                 </Button>
                  {#if onDock}
                     <Button variant="ghost" size="icon" class="h-6 w-6" onclick={onDock} title="Dock to side">
                         <Maximize2 size={14} />
@@ -274,6 +286,9 @@
                 <Bot size={16} /> Chat
             </div>
             <div class="flex items-center gap-1">
+                 <Button variant="ghost" size="icon" class="h-6 w-6" onclick={resetChat} title="Clear Chat">
+                    <Trash2 size={14} />
+                 </Button>
                  {#if onUndock}
                     <Button variant="ghost" size="icon" class="h-6 w-6" onclick={onUndock} title="Undock">
                         <Minimize2 size={14} />

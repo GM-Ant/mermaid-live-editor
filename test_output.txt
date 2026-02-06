@@ -1,0 +1,139 @@
+
+> mermaid-live-editor@2.0.67 test:e2e /Users/gregory/syncthing/gregory/code/mermaid-live-editor
+> playwright test tests/actions.spec.ts
+
+
+Running 4 tests using 4 workers
+
+  -  1 [chromium] › tests/actions.spec.ts:15:8 › Check actions › should load gists from URL
+  ✘  3 [chromium] › tests/actions.spec.ts:8:3 › Check actions › should update markdown code (30.1s)
+  ✘  2 [chromium] › tests/actions.spec.ts:23:3 › Check actions › should download png and svg (30.1s)
+  ✘  4 [chromium] › tests/actions.spec.ts:40:3 › Check actions › should reset state when Reset button is clicked (30.1s)
+
+
+  1) [chromium] › tests/actions.spec.ts:8:3 › Check actions › should update markdown code ──────────
+
+    [31mTest timeout of 30000ms exceeded while running "beforeEach" hook.[39m
+
+      2 |
+      3 | test.describe('Check actions', () => {
+    > 4 |   test.beforeEach(async ({ editPage }) => {
+        |        ^
+      5 |     await editPage.toggleActions();
+      6 |   });
+      7 |
+        at /Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/actions.spec.ts:4:8
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByText('Sample Diagrams', { exact: true })[22m
+
+
+       at test.ts:46
+
+      44 |
+      45 |   async toggleSampleDiagrams() {
+    > 46 |     await this.page.getByText('Sample Diagrams', { exact: true }).click();
+         |                                                                   ^
+      47 |   }
+      48 |
+      49 |   async checkAndDownloadPNG(expectedSize: number) {
+        at EditorPage.toggleSampleDiagrams (/Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/test.ts:46:67)
+        at Object.editPage (/Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/test.ts:120:22)
+
+    Error Context: test-results/actions-Check-actions-should-update-markdown-code-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/actions-Check-actions-should-update-markdown-code-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/actions-Check-actions-should-update-markdown-code-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/actions.spec.ts:23:3 › Check actions › should download png and svg ─────────
+
+    [31mTest timeout of 30000ms exceeded while running "beforeEach" hook.[39m
+
+      2 |
+      3 | test.describe('Check actions', () => {
+    > 4 |   test.beforeEach(async ({ editPage }) => {
+        |        ^
+      5 |     await editPage.toggleActions();
+      6 |   });
+      7 |
+        at /Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/actions.spec.ts:4:8
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByText('Sample Diagrams', { exact: true })[22m
+
+
+       at test.ts:46
+
+      44 |
+      45 |   async toggleSampleDiagrams() {
+    > 46 |     await this.page.getByText('Sample Diagrams', { exact: true }).click();
+         |                                                                   ^
+      47 |   }
+      48 |
+      49 |   async checkAndDownloadPNG(expectedSize: number) {
+        at EditorPage.toggleSampleDiagrams (/Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/test.ts:46:67)
+        at Object.editPage (/Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/test.ts:120:22)
+
+    Error Context: test-results/actions-Check-actions-should-download-png-and-svg-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/actions-Check-actions-should-download-png-and-svg-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/actions-Check-actions-should-download-png-and-svg-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/actions.spec.ts:40:3 › Check actions › should reset state when Reset button is clicked 
+
+    [31mTest timeout of 30000ms exceeded while running "beforeEach" hook.[39m
+
+      2 |
+      3 | test.describe('Check actions', () => {
+    > 4 |   test.beforeEach(async ({ editPage }) => {
+        |        ^
+      5 |     await editPage.toggleActions();
+      6 |   });
+      7 |
+        at /Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/actions.spec.ts:4:8
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByText('Sample Diagrams', { exact: true })[22m
+
+
+       at test.ts:46
+
+      44 |
+      45 |   async toggleSampleDiagrams() {
+    > 46 |     await this.page.getByText('Sample Diagrams', { exact: true }).click();
+         |                                                                   ^
+      47 |   }
+      48 |
+      49 |   async checkAndDownloadPNG(expectedSize: number) {
+        at EditorPage.toggleSampleDiagrams (/Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/test.ts:46:67)
+        at Object.editPage (/Users/gregory/syncthing/gregory/code/mermaid-live-editor/tests/test.ts:120:22)
+
+    Error Context: test-results/actions-Check-actions-shou-c0d22-hen-Reset-button-is-clicked-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/actions-Check-actions-shou-c0d22-hen-Reset-button-is-clicked-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/actions-Check-actions-shou-c0d22-hen-Reset-button-is-clicked-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests/actions.spec.ts:8:3 › Check actions › should update markdown code ───────────
+    [chromium] › tests/actions.spec.ts:23:3 › Check actions › should download png and svg ──────────
+    [chromium] › tests/actions.spec.ts:40:3 › Check actions › should reset state when Reset button is clicked 
+  1 skipped
+ ELIFECYCLE  Command failed with exit code 1.

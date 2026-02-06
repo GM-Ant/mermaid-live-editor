@@ -1,12 +1,21 @@
 import { diagramData } from '@mermaid-js/examples';
 import elkLayouts from '@mermaid-js/layout-elk';
-import tidyTreeLayouts from '@mermaid-js/layout-tidy-tree';
 import zenuml from '@mermaid-js/mermaid-zenuml';
 import type { MermaidConfig, RenderResult } from 'mermaid';
 import mermaid from 'mermaid';
 
-mermaid.registerLayoutLoaders([...elkLayouts, ...tidyTreeLayouts]);
-const init = mermaid.registerExternalDiagrams([zenuml]);
+const init = (async () => {
+  try {
+    const tidyTreeLayouts = await import('@mermaid-js/layout-tidy-tree').then(
+      (m) => m.default || m
+    );
+    mermaid.registerLayoutLoaders([...elkLayouts, ...tidyTreeLayouts]);
+  } catch (e) {
+    console.error('Failed to load tidy-tree layouts', e);
+    mermaid.registerLayoutLoaders([...elkLayouts]);
+  }
+  await mermaid.registerExternalDiagrams([zenuml]);
+})();
 
 export const render = async (
   config: MermaidConfig,

@@ -207,6 +207,9 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.3.0
+      happy-dom:
+        specifier: ^20.4.0
+        version: 20.4.0
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -275,7 +278,7 @@ importers:
         version: 1.0.0(vite@7.1.4(@types/node@22.15.10)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.7.0))
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
+        version: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
       vitest-dom:
         specifier: ^0.1.1
         version: 0.1.1(vitest@3.2.4)
@@ -1280,6 +1283,12 @@ packages:
 
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+
+  '@types/whatwg-mimetype@3.0.2':
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
+
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@typescript-eslint/eslint-plugin@8.42.0':
     resolution: {integrity: sha512-Aq2dPqsQkxHOLfb2OPv43RnIvfj05nw8v/6n3B2NABIPpHnjQnaLo9QGMTvml+tv4korl/Cjfrb/BYhoL8UUTQ==}
@@ -2364,6 +2373,10 @@ packages:
   hammerjs@2.0.8:
     resolution: {integrity: sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ==}
     engines: {node: '>=0.8.0'}
+
+  happy-dom@20.4.0:
+    resolution: {integrity: sha512-RDeQm3dT9n0A5f/TszjUmNCLEuPnMGv3Tv4BmNINebz/h17PA6LMBcxJ5FrcqltNBMh9jA/8ufgDdBYUdBt+eg==}
+    engines: {node: '>=20.0.0'}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -4078,6 +4091,10 @@ packages:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
 
+  whatwg-mimetype@3.0.0:
+    resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
+    engines: {node: '>=12'}
+
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
     engines: {node: '>=18'}
@@ -4117,6 +4134,18 @@ packages:
 
   ws@8.18.1:
     resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
+  ws@8.19.0:
+    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -5156,6 +5185,12 @@ snapshots:
 
   '@types/uuid@9.0.8': {}
 
+  '@types/whatwg-mimetype@3.0.2': {}
+
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 22.15.10
+
   '@typescript-eslint/eslint-plugin@8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.2))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.2)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
@@ -5264,7 +5299,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
+      vitest: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -5313,7 +5348,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
+      vitest: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -6435,6 +6470,18 @@ snapshots:
   hachure-fill@0.5.2: {}
 
   hammerjs@2.0.8: {}
+
+  happy-dom@20.4.0:
+    dependencies:
+      '@types/node': 22.15.10
+      '@types/whatwg-mimetype': 3.0.2
+      '@types/ws': 8.18.1
+      entities: 4.5.0
+      whatwg-mimetype: 3.0.0
+      ws: 8.19.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   has-flag@4.0.0: {}
 
@@ -7896,9 +7943,9 @@ snapshots:
       dom-accessibility-api: 0.6.3
       lodash-es: 4.17.21
       redent: 4.0.0
-      vitest: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
+      vitest: 3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0)
 
-  vitest@3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0):
+  vitest@3.2.4(@types/node@22.15.10)(@vitest/ui@3.2.4)(happy-dom@20.4.0)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(yaml@2.7.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -7926,6 +7973,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.10
       '@vitest/ui': 3.2.4(vitest@3.2.4)
+      happy-dom: 20.4.0
       jsdom: 25.0.1
     transitivePeerDependencies:
       - jiti
@@ -7972,6 +8020,8 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
 
+  whatwg-mimetype@3.0.0: {}
+
   whatwg-mimetype@4.0.0: {}
 
   whatwg-url@14.2.0:
@@ -8011,6 +8061,8 @@ snapshots:
   wrappy@1.0.2: {}
 
   ws@8.18.1: {}
+
+  ws@8.19.0: {}
 
   xml-name-validator@5.0.0: {}
 

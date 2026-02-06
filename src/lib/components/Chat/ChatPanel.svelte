@@ -9,8 +9,8 @@
     Loader2,
     Maximize2,
     Minimize2,
-    RotateCcw,
     Send,
+    Trash2,
     User,
     X,
     X as XIcon
@@ -79,6 +79,9 @@
   $effect(() => {
     if (messages.length > 0) {
       localStorage.setItem('mermaid-chat-history', JSON.stringify(messages));
+    } else {
+      // Clear storage if messages empty (reset)
+      localStorage.removeItem('mermaid-chat-history');
     }
   });
 
@@ -262,6 +265,8 @@
   const resetChat = () => {
     if (confirm('Are you sure you want to clear the chat history and reset the diagram?')) {
       messages = [];
+      input = '';
+      isLoading = false;
       localStorage.removeItem('mermaid-chat-history');
       resetState();
     }
@@ -278,13 +283,8 @@
         <Bot size={16} /> AI Assistant
       </div>
       <div class="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          class="h-6 w-6"
-          onclick={resetChat}
-          title="Reset Chat & Diagram">
-          <RotateCcw size={14} />
+        <Button variant="ghost" size="icon" class="h-6 w-6" onclick={resetChat} title="Clear Chat">
+          <Trash2 size={14} />
         </Button>
         {#if onDock}
           <Button variant="ghost" size="icon" class="h-6 w-6" onclick={onDock} title="Dock to side">
@@ -305,13 +305,8 @@
         <Bot size={16} /> Chat
       </div>
       <div class="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          class="h-6 w-6"
-          onclick={resetChat}
-          title="Reset Chat & Diagram">
-          <RotateCcw size={14} />
+        <Button variant="ghost" size="icon" class="h-6 w-6" onclick={resetChat} title="Clear Chat">
+          <Trash2 size={14} />
         </Button>
         {#if onUndock}
           <Button variant="ghost" size="icon" class="h-6 w-6" onclick={onUndock} title="Undock">

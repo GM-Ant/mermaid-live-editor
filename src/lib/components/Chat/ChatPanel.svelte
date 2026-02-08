@@ -1,7 +1,13 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
   import { parse } from '$lib/util/mermaid';
-  import { resetState, stateStore, updateCode, updateCodeStore } from '$lib/util/state';
+  import {
+    resetState,
+    stateStore,
+    updateCode,
+    updateCodeStore,
+    updateConfig
+  } from '$lib/util/state';
   import DOMPurify from 'dompurify';
   import {
     Bot,
@@ -211,7 +217,23 @@
             finalMsg.toolStatus = 'pending';
 
             // Validate syntax immediately
-            await validateToolCode(args.code, assistantIndex);
+            await validateToolCode(args.code, assistantIndex, 'diagram');
+          } catch (e) {
+            console.error('Failed to parse tool arguments', e);
+            finalMsg.content += '\n\n*Error: Failed to parse tool arguments*';
+            finalMsg.toolStatus = 'error';
+          }
+        } else if (toolCall.function.name === 'updateConfig') {
+          try {
+            const args = JSON.parse(toolCall.function.arguments);
+            finalMsg.pendingToolCall = {
+              id: toolCall.id,
+              name: toolCall.function.name,
+              arguments: args.config
+            };
+            finalMsg.toolStatus = 'pending';
+
+            await validateToolCode(args.config, assistantIndex, 'config');
           } catch (e) {
             console.error('Failed to parse tool arguments', e);
             finalMsg.content += '\n\n*Error: Failed to parse tool arguments*';
@@ -228,13 +250,21 @@
     }
   };
 
-  const validateToolCode = async (code: string, msgIndex: number) => {
+  const validateToolCode = async (
+    code: string,
+    msgIndex: number,
+    type: 'diagram' | 'config' = 'diagram'
+  ) => {
     try {
-      await parse(code);
+      if (type === 'diagram') {
+        await parse(code);
+      } else {
+        JSON.parse(code);
+      }
       // If valid, keeping status as pending waiting for user confirmation
     } catch (e) {
       messages[msgIndex].toolStatus = 'error';
-      messages[msgIndex].content += `\n\n*Syntax Validation Failed:* ${(e as Error).message}`;
+      messages[msgIndex].content += `\n\n*Validation Failed:* ${(e as Error).message}`;
     }
   };
 
@@ -243,10 +273,14 @@
     if (!msg.pendingToolCall) return;
 
     if (action === 'accept') {
-      if ($stateStore.editorMode === 'config') {
-        updateCodeStore({ editorMode: 'code' });
+      if (msg.pendingToolCall.name === 'updateConfig') {
+        updateConfig(msg.pendingToolCall.arguments);
+      } else {
+        if ($stateStore.editorMode === 'config') {
+          updateCodeStore({ editorMode: 'code' });
+        }
+        updateCode(msg.pendingToolCall.arguments, { updateDiagram: true });
       }
-      updateCode(msg.pendingToolCall.arguments, { updateDiagram: true });
       msg.toolStatus = 'applied';
 
       // Should we simulate sending a tool output back to LLM?
@@ -347,7 +381,10 @@
           <div
             class="flex w-full max-w-[90%] flex-col gap-2 rounded-lg border bg-card p-3 shadow-sm">
             <div class="flex items-center justify-between border-b pb-2">
-              <span class="text-xs font-semibold">Proposed Change</span>
+              <span class="text-xs font-semibold"
+                >{msg.pendingToolCall.name === 'updateConfig'
+                  ? 'Proposed Config Change'
+                  : 'Proposed Diagram Change'}</span>
               {#if msg.toolStatus === 'pending'}
                 <span class="text-xs text-yellow-500">Validation Passed</span>
               {:else if msg.toolStatus === 'applied'}

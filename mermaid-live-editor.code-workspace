@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"svelte.enable-ts-plugin": true,
+		"githubPullRequests.ignoredPullRequestBranches": [
+			"develop"
+		]
+	}
+}

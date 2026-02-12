@@ -26,6 +26,8 @@
   import CodeIcon from '~icons/custom/code';
   import HistoryIcon from '~icons/material-symbols/history';
   import GearIcon from '~icons/material-symbols/settings-outline-rounded';
+  import ChatPanel from '$/components/Chat/ChatPanel.svelte';
+  import { MessageSquare } from 'lucide-svelte';
 
   const panZoomState = new PanZoomState();
 
@@ -59,6 +61,8 @@
   });
 
   let isHistoryOpen = $state(false);
+  // Chat modes: 'hidden' | 'floating' | 'pane'
+  let chatMode = $state<'hidden' | 'floating' | 'pane'>('hidden');
 
   let editorPane: Resizable.Pane | undefined;
   $effect(() => {
@@ -66,9 +70,17 @@
       editorPane?.resize(50);
     }
   });
+
+  const toggleChat = () => {
+    if (chatMode === 'hidden') {
+      chatMode = 'floating';
+    } else {
+      chatMode = 'hidden';
+    }
+  };
 </script>
 
-<div class="flex h-full flex-col overflow-hidden">
+<div class="flex h-full flex-col overflow-hidden relative">
   {#snippet mobileToggle()}
     <div class="flex items-center gap-2">
       Edit <Switch
@@ -82,6 +94,9 @@
   {/snippet}
 
   <Navbar mobileToggle={isMobile ? mobileToggle : undefined}>
+    <Toggle pressed={chatMode !== 'hidden'} onPressedChange={toggleChat} size="sm" aria-label="Toggle Chat">
+      <MessageSquare class="size-4" />
+    </Toggle>
     <Toggle bind:pressed={isHistoryOpen} size="sm">
       <HistoryIcon />
     </Toggle>
@@ -134,7 +149,30 @@
           <div class="absolute top-0 right-0"><PanZoomToolbar {panZoomState} /></div>
           <div class="absolute right-0 bottom-0"><VersionSecurityToolbar /></div>
           <div class="absolute bottom-0 left-0 sm:left-5"><SyncRoughToolbar /></div>
+
+          {#if chatMode === 'floating'}
+            <div class="absolute bottom-4 right-4 z-50 h-[500px] w-[400px]">
+                <ChatPanel
+                    mode="floating"
+                    onDock={() => chatMode = 'pane'}
+                    onClose={() => chatMode = 'hidden'}
+                />
+            </div>
+          {/if}
         </Resizable.Pane>
+        {#if chatMode === 'pane'}
+          <Resizable.Handle class="ml-1 hidden opacity-0 sm:block" />
+          <Resizable.Pane
+            minSize={15}
+            defaultSize={30}
+            class="hidden h-full flex-grow flex-col sm:flex">
+            <ChatPanel
+                mode="pane"
+                onUndock={() => chatMode = 'floating'}
+                onClose={() => chatMode = 'hidden'}
+            />
+          </Resizable.Pane>
+        {/if}
         {#if isHistoryOpen}
           <Resizable.Handle class="ml-1 hidden opacity-0 sm:block" />
           <Resizable.Pane

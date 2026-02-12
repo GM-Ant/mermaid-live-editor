@@ -18,6 +18,7 @@
   import { toBase64 } from 'js-base64';
   import DownloadIcon from '~icons/material-symbols/download';
   import ExternalLinkIcon from '~icons/material-symbols/open-in-new-rounded';
+  import RestartIcon from '~icons/material-symbols/restart-alt-rounded';
   import WidthIcon from '~icons/material-symbols/width-rounded';
 
   const FONT_AWESOME_URL = `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/${FAVersion}/css/all.min.css`;
@@ -177,6 +178,13 @@ ${svgString}`);
     });
   };
 
+  const onReset = () => {
+    if (confirm('Are you sure you want to reset the diagram to the default state?')) {
+      resetState();
+      logEvent('reset');
+    }
+  };
+
   let gistURL = $state('');
   stateStore.subscribe(({ loader }) => {
     if (loader?.type === 'gist') {
@@ -267,6 +275,12 @@ ${svgString}`);
       <Input type="url" bind:value={gistURL} placeholder="Enter Gist URL" />
       <Button onclick={loadGist}>Load Gist</Button>
     </div>
+    <div class="flex w-full items-center gap-2">
+      <Button variant="destructive" class="w-full" onclick={onReset}>
+        <RestartIcon /> Reset
+      </Button>
+    </div>
+
     {#if isNetlify}
       <div class="flex w-full items-center justify-center">
         <a class="link text-sm text-gray-500 underline" href="https://netlify.com">

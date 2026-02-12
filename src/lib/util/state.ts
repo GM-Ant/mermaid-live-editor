@@ -219,6 +219,12 @@ export const updateCode = (
   });
 };
 
+export const resetState = (): void => {
+  inputStateStore.update((state) => {
+    return { ...state, ...defaultState };
+  });
+};
+
 export const updateConfig = (config: string): void => {
   updateCodeStore({ mermaid: config });
 };

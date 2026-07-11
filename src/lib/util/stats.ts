@@ -23,6 +23,15 @@ export const initAnalytics = async (): Promise<void> => {
   }
 };
 
+/**
+ * Build the current page URL for analytics tracking.
+ * Includes origin, pathname, and search (for UTM params),
+ * but never the hash (which contains diagram data).
+ */
+export const getAnalyticsSafeUrl = (): string => {
+  return window.location.origin + window.location.pathname + window.location.search;
+};
+
 export const countLines = (code: string): number => {
   return (code.match(/\n/g)?.length ?? 0) + 1;
 };
@@ -77,19 +86,20 @@ const minutesToMilliSeconds = (minutes: number): number => {
   return minutes * 60_000;
 };
 
+const noDelay = 0;
 const defaultDelay = minutesToMilliSeconds(1);
 const delaysPerEvent = {
-  bannerClick: defaultDelay,
+  bannerClick: noDelay,
+  chooseEditor: noDelay,
   copyClipboard: defaultDelay,
   copyMarkdown: defaultDelay,
   download: defaultDelay,
   history: defaultDelay,
   loadGist: defaultDelay,
   loadSampleDiagram: defaultDelay,
+  mermaidChartClick: noDelay,
   migration: defaultDelay,
   mobileViewToggle: defaultDelay,
-  panZoom: minutesToMilliSeconds(10),
-  playgroundToggle: 0,
   pwaInstalled: defaultDelay,
   render: minutesToMilliSeconds(5),
   renderDiagram: defaultDelay,
@@ -103,6 +113,9 @@ export const logEvent = (
   name: AnalyticsEvent,
   data?: Record<string, string | number | boolean>
 ): void => {
+  if (browser && window.location.hostname === 'localhost') {
+    console.log('[plausible]', name, data);
+  }
   if (!plausible) {
     return;
   }
@@ -110,14 +123,14 @@ export const logEvent = (
   if (timeouts.has(key)) {
     clearTimeout(timeouts.get(key));
   } else {
-    plausible.trackEvent(
-      name,
-      { props: data },
-      { url: window.location.origin + window.location.pathname }
-    );
+    plausible.trackEvent(name, { props: data }, { url: getAnalyticsSafeUrl() });
   }
   timeouts.set(
     key,
     window.setTimeout(() => timeouts.delete(key), delaysPerEvent[name])
   );
+};
+
+export const logMermaidChartClick = (source: string): void => {
+  logEvent('mermaidChartClick', { source });
 };

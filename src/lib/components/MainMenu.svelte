@@ -2,7 +2,9 @@
   import McWrapper from '$/components/McWrapper.svelte';
   import * as Popover from '$/components/ui/popover';
   import { Switch } from '$/components/ui/switch';
-  import { urlsStore } from '$/util/state';
+  import { env } from '$/util/env';
+  import { urls } from '$/util/state.svelte';
+  import { logMermaidChartClick } from '$/util/stats';
   import { cn } from '$/utils';
   import { mode, setMode } from 'mode-watcher';
   import type { Component, Snippet } from 'svelte';
@@ -22,32 +24,34 @@
     icon: Component;
     href: string;
     class?: string;
+    onclick?: () => void;
     sharesData?: boolean;
     checkDiagramType?: boolean;
     isSectionEnd?: boolean;
-    renderer: (item: Omit<MenuItem, 'renderer'>) => ReturnType<Snippet>;
+    renderer: Snippet<[Omit<MenuItem, 'renderer'>]>;
   }
 
   const menuItems: MenuItem[] = $derived([
-    { label: 'New', icon: AddIcon, href: $urlsStore.new, renderer: menuItem },
+    { label: 'New', icon: AddIcon, href: urls.current.new, renderer: menuItem },
     { label: 'Duplicate', icon: DuplicateIcon, href: window.location.href, renderer: menuItem },
     {
-      href: $urlsStore.mermaidChart({ medium: 'main_menu' }).playground,
+      href: urls.current.mermaidChart({ medium: 'main_menu' }).playground,
       icon: PlaygroundIcon,
       isSectionEnd: true,
       label: 'Edit in Playground',
+      onclick: () => logMermaidChartClick('editInPlayground'),
       renderer: mcMenuItem
     },
     {
       label: 'Mermaid.js',
       icon: MermaidTailIcon,
-      href: 'https://mermaid.js.org/',
+      href: env.docsUrl,
       renderer: menuItem
     },
     {
       label: 'Documentation',
       icon: BookIcon,
-      href: 'https://mermaid.js.org/intro/',
+      href: `${env.docsUrl}/intro/`,
       renderer: menuItem
     },
     {
@@ -58,9 +62,10 @@
     },
     {
       checkDiagramType: false,
-      href: $urlsStore.mermaidChart({ medium: 'main_menu' }).plugins,
+      href: urls.current.mermaidChart({ medium: 'main_menu' }).plugins,
       icon: PluginIcon,
       label: 'Plugins',
+      onclick: () => logMermaidChartClick('plugins'),
       renderer: mcMenuItem,
       sharesData: false
     },
@@ -74,19 +79,21 @@
     {
       checkDiagramType: false,
       class: 'text-accent border-b-0',
-      href: $urlsStore.mermaidChart({ medium: 'main_menu' }).home,
+      href: urls.current.mermaidChart({ medium: 'main_menu' }).home,
       icon: MermaidChartIcon,
       label: 'Mermaid',
+      onclick: () => logMermaidChartClick('mermaidHome'),
       renderer: mcMenuItem,
       sharesData: false
     }
   ]);
 </script>
 
-{#snippet menuItem(options: MenuItem)}
+{#snippet menuItem(options: Omit<MenuItem, 'renderer'>)}
   <a
     href={options.href}
     target="_blank"
+    onclick={options.onclick}
     class={cn(
       'flex items-center justify-start gap-2 border-b-2 p-2 px-3 hover:bg-muted',
       options.isSectionEnd && 'border-border-dark',
@@ -97,7 +104,7 @@
   </a>
 {/snippet}
 
-{#snippet mcMenuItem(item: MenuItem)}
+{#snippet mcMenuItem(item: Omit<MenuItem, 'renderer'>)}
   <McWrapper
     side="right"
     labelPrefix={item.sharesData === false ? 'Opens a new tab in' : undefined}
@@ -107,7 +114,7 @@
   </McWrapper>
 {/snippet}
 
-{#snippet darkModeMenuItem(options: MenuItem)}
+{#snippet darkModeMenuItem(options: Omit<MenuItem, 'renderer'>)}
   <div
     class={cn(
       'flex cursor-pointer items-center justify-between border-b-2 px-3 py-2 hover:bg-muted',
@@ -119,7 +126,7 @@
       Dark Mode
     </span>
     <Switch
-      checked={$mode === 'dark'}
+      checked={mode.current === 'dark'}
       onCheckedChange={(dark) => setMode(dark ? 'dark' : 'light')} />
   </div>
 {/snippet}
